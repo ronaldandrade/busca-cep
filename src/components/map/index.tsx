@@ -1,27 +1,33 @@
+import 'leaflet/dist/leaflet.css'
 import React from 'react';
-import { MapContainer as LeafletMap, MapContainerProps as LeafletMapProps,TileLayer } from 'react-leaflet';
+import { MapContainer ,Marker,Popup,TileLayer } from 'react-leaflet';
 
-interface MapProps extends LeafletMapProps{
-  // eslint-disable-next-line react/require-default-props
-  interactive?: boolean
+interface MapProps {
   children: React.ReactNode
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-export default function Map({children, interactive = true, ...props }: MapProps) {
-  return (
-    <LeafletMap
-    center={[51.505, -0.09]}
-    zoom={13} s
-    crollWheelZoom={false}
-    style={{ width: '100%', height: '100%' }}
-    zoomControl={interactive}
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    {...props}
-    >
-  <TileLayer
- url="https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZGllZ28zZyIsImEiOiJjamh0aHc4em0wZHdvM2tyc3hqbzNvanhrIn0.3HWnXHy_RCi35opzKo8sHQ" />
+export default function Map({ children }:MapProps) {
 
-</LeafletMap>
-  );
+return (
+  <MapContainer
+  style={{
+    width: "656px",
+    height: "400px",
+    background: "#09031A" }}
+    center={[51.505, -0.09]}
+    zoom={13}
+    stylescrollWheelZoom={false} >
+
+    <TileLayer
+      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      url={`https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_ACCESS_TOKEN_MAP_BOX}`}
+      {...children}
+    />
+    <Marker position={[51.505, -0.09]}>
+      <Popup>
+        A pretty CSS3 popup. <br /> Easily customizable.
+      </Popup>
+    </Marker>
+  </MapContainer>
+ );
 }

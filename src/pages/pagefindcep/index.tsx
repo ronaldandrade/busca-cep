@@ -34,8 +34,6 @@ const FrontPage: React.FC = () => {
 
     try{
       const response = await apiViaCEP.get(`${newAddress}/json`);
-    console.log(response.data)
-
       const address = response.data;
 
       setAddress([ address ]);

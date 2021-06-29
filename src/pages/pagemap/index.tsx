@@ -1,37 +1,48 @@
-import React from 'react';
-import 'leaflet/dist/leaflet.css';
-import { Marker, Popup } from 'react-leaflet';
+import React, { useEffect, useState } from 'react';
+import {  Popup } from 'react-leaflet';
 
-import Map from '../../components/map'
-import { Adresses } from '../pagefindcep/styles';
+import MapContainer from '../../components/map';
 
-import { Title } from './styles'
+import { Title, Adresses } from './styles';
 
-const containerMap: React.FC = () => (
+const containerMap: React.FC = () => {
 
-  <>
-    <Title>Buscador de CEP</Title>
+ const [addresses] = useState<ViaCEPInfo[]>(() => {
+  const storageAddresses = localStorage.getItem('https://viacep.com.br/ws/');
 
-    <Map className="mapcontent">
-    <div className="mapid">
-      <Marker position={[-23.56452, -46.61708]}>
+    if (storageAddresses) {
+      return JSON.parse(storageAddresses);
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(
+      'https://viacep.com.br/ws/',
+      JSON.stringify(addresses));
+  }, [addresses]);
+
+  return (
+    <>
+      <Title>Buscador de CEP</Title>
+      <MapContainer>
         <Popup closeButton={false} minWidth={240} maxWidth={240} />
-      </Marker>
-      </div>
-    </Map>
+      </MapContainer>
+      <Adresses>
+        {addresses.map(address => (
+          <a href="/">
+            <div>
+              <h1>{address.cep}</h1>
+              <strong>{address.logradouro}</strong>
+              <p>{address.bairro}</p>
+              <p>{address.uf}</p>
+            </div>
+          </a>
+        ))}
+      </Adresses>
+    </>
+  )
+}
 
-    <Adresses>
-      <a href="/">
-        <div>
-          <h1>asdasd</h1>
-          <strong>asdasd</strong>
-          <p>asdasd</p>
-          <p>adasdasd</p>
-        </div>
-      </a>
-    </Adresses>
-
-</>
-)
 
 export default containerMap;
